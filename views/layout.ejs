@@ -9,6 +9,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./scripts/web3.js"></script>
     <script src="./process.js"></script>
+    <style>
+      #signUpForm,
+      #list {
+        background-color: antiquewhite;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      #listTB {
+        width: 90%;
+      }
+      #line1 td,
+      .row {
+        text-align: center;
+        padding: 4px;
+        border-bottom: solid 1px cornflowerblue;
+      }
+    </style>
   </head>
   <body>
     <h2>Minigame</h2>
@@ -18,6 +35,14 @@
       <input id="txtEmail" type="text" placeholder="Email" />
       <input id="txtPhone" type="text" placeholder="Phone" />
       <button id="btnSignUp">Sign up</button>
+    </div>
+    <div id="list">
+      <table id="listTB">
+        <tr id="line1">
+          <td>Address</td>
+          <td>_ID</td>
+        </tr>
+      </table>
     </div>
   </body>
 </html>
