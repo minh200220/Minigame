@@ -1,4 +1,19 @@
 $(document).ready(function () {
+  $("#table_id").DataTable({
+    info: false,
+    ajax: "http://localhost:3000/players",
+    columns: [
+      { data: "_id" },
+      { data: "email" },
+      { data: "fullName" },
+      { data: "phone" },
+      { data: "paid" },
+      // { data: "wallet" },
+      // { data: "date" },
+      // { data: "__v" },
+    ],
+  });
+
   const abi = [
     {
       anonymous: false,

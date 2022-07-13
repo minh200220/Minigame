@@ -28,4 +28,14 @@ module.exports = function (app) {
       });
     }
   });
+
+  app.get("/players", async (req, res) => {
+    try {
+      const players = await Player.find();
+
+      res.status(200).json({ data: players });
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  });
 };
