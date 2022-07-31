@@ -6,8 +6,8 @@ module.exports = function (app) {
   });
 
   app.post("/signup", (req, res) => {
-    const { email, fullName, phone } = req.body;
-    if (!email || !fullName || !phone) {
+    const { email, fullName, phone, wallet } = req.body;
+    if (!email || !fullName || !phone || !wallet) {
       res.json({ result: 0, error: "Missing params" });
     } else {
       var newPlayer = new Player({
@@ -15,7 +15,7 @@ module.exports = function (app) {
         fullName,
         phone,
         paid: false,
-        wallet: "",
+        wallet,
         date: Date.now(),
       });
 

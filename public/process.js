@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $("#table_id").DataTable({
+  table = $("#table_id").DataTable({
     info: false,
     ajax: "http://localhost:3000/players",
     columns: [
@@ -8,9 +8,9 @@ $(document).ready(function () {
       { data: "fullName" },
       { data: "phone" },
       { data: "paid" },
-      // { data: "wallet" },
-      // { data: "date" },
-      // { data: "__v" },
+      { data: "wallet" },
+      { data: "date" },
+      { data: "__v" },
     ],
   });
 
@@ -32,6 +32,44 @@ $(document).ready(function () {
         },
       ],
       name: "SM_send_data",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "_one",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "_two",
+          type: "uint256",
+        },
+      ],
+      name: "SM_send_number",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "_wallet",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "string",
+          name: "_id",
+          type: "string",
+        },
+      ],
+      name: "SM_send_winner",
       type: "event",
     },
     {
@@ -71,8 +109,15 @@ $(document).ready(function () {
       stateMutability: "view",
       type: "function",
     },
+    {
+      inputs: [],
+      name: "random2",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
   ];
-  const addressSM = "0xf287b7C0a57216df0A21f71D30F5De26671D9705";
+  const addressSM = "0x65eC04beF05cBfEac3269Ce8f4cA4c9F531025fe";
 
   const web3 = new Web3(window.ethereum);
   window.ethereum.enable();
@@ -95,6 +140,7 @@ $(document).ready(function () {
         console.log(error);
       } else {
         console.log(event);
+        table.ajax.reload(null, false);
         $("#listTB").append(
           `
         <tr id="line1">
@@ -107,6 +153,23 @@ $(document).ready(function () {
         </tr>
         `
         );
+      }
+    }
+  );
+
+  contract_Infura.events.SM_send_number(
+    { filter: {}, fromBlock: "latest" },
+    function (error, event) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(
+          "winner is:",
+          event.returnValues[0],
+          "id: ",
+          event.returnValues[1]
+        );
+        console.log(event);
       }
     }
   );
@@ -129,21 +192,37 @@ $(document).ready(function () {
     if (currentAccount.length == 0) {
       alert("Please connect to your MetaMask");
     } else {
+      console.log(currentAccount);
       $.post(
         "./signup",
         {
           email: $("#txtEmail").val(),
           fullName: $("#txtFullName").val(),
           phone: $("#txtPhone").val(),
+          wallet: currentAccount,
         },
         function (data) {
           if (data.result == 1) {
+            console.log(data);
             contract_MM.methods.SignUp(data.error._id).send({
               from: currentAccount,
             });
           }
         }
       );
+    }
+  });
+
+  $("#btnLogWinner").click(function () {
+    if (currentAccount.length == 0) {
+      alert("Please connect to your MetaMask");
+    } else {
+      $.get("./players", function (data) {
+        console.log(data);
+        contract_MM.methods.random2().send({
+          from: currentAccount,
+        });
+      });
     }
   });
 
